@@ -1,113 +1,145 @@
-import React, { useState, useEffect } from 'react';
-import { v4 as uuid } from 'uuid';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import fs from 'fs';
-import path from 'path';
+import React, { useState } from 'react';
+import FileExplorerItem from './fileExplorerItem';
 import { Item } from '../../types';
-import DraggableItem from '../DraggableItem/DraggableItem';
+import NewFileModal from '../modals/newFileModal';
+import NewFolderModal from '../modals/newFolderModal';
+import ChooseFolderModal from '../modals/chooseFolderModal';
 
-// types
-
-interface FileExplorerProps { }
-
-const FileExplorer: React.FC<FileExplorerProps> = () => {
-    const [currentPath, setCurrentPath] = useState<string>('');
+export const FileExplorer: React.FC = () => {
     const [items, setItems] = useState<Item[]>([]);
+    const [path, setPath] = useState<string>('');
+    const [selectedItems, setSelectedItems] = useState<Item[]>([]);
+    const [showNewFileModal, setShowNewFileModal] = useState(false);
+    const [showNewFolderModal, setShowNewFolderModal] = useState(false);
+    const [showChooseFolderModal, setShowChooseFolderModal] = useState(false);
 
-    useEffect(() => {
-        // Read the contents of the current directory when the component mounts
-        // or when the current path changes
-        const readDirectory = async (dirPath: string) => {
-            const items = await fs.promises.readdir(dirPath);
-            setItems(items.map((item) => ({ id: uuid(), name: item, path: path.join(dirPath, item) })));
-        };
-        readDirectory(currentPath);
-    }, [currentPath]);
-
-    const handleCreateFolder = () => {
-        // Show a prompt to enter the name of the new folder
-        const folderName = window.prompt('Enter the name of the new folder:');
-        if (!folderName) return;
-
-        // Use the fs module to create the new folder
-        fs.mkdir(path.join(currentPath, folderName), (error) => {
-            if (error) {
-                console.error(error);
-                return;
-            }
-            // Update the list of items to include the new folder
-            setItems([...items, { id: uuid(), name: folderName, path: path.join(currentPath, folderName) }]);
-        });
+    const handleNavigate = (item: Item) => {
+        if (item.type === 'folder') {
+            setPath(item.path);
+        }
     };
 
-    const handleCreateFile = () => {
-        // Show a prompt to enter the name of the new file
-        const fileName = window.prompt('Enter the name of the new file:');
-        if (!fileName) return;
-
-        // Use the fs module to create the new file
-        fs.writeFile(path.join(currentPath, fileName), '', (error) => {
-            if (error) {
-                console.error(error);
-                return;
-            }
-            // Update the list of items to include the new file
-            setItems([...items, { id: uuid(), name: fileName, path: path.join(currentPath, fileName) }]);
-        });
+    const handleMove = (src: string[], dest: string[]) => {
+        // implement handleMove function
     };
 
-    const handleSelectFolder = (item: Item) => {
-        // Update the current path to the selected folder
-        setCurrentPath(item.path);
+    const handleCreateFile = (path: string, name: string) => {
+        // implement handleCreateFile function
+        setShowNewFileModal(false);
     };
 
-    const handleMoveItem = (item: Item, targetPath: string) => {
-        // Use the fs module to move the item to the target path
-        fs.rename(item.path, targetPath, (error) => {
-            if (error) {
-                console.error(error);
-                return;
-            }
-            // Update the list of items to reflect the moved item
-            setItems(
-                items.map((i) => {
-                    if (i.id === item.id) {
-                        return { ...i, path: targetPath };
-                    }
-                    return i;
-                }),
-            );
-        });
+    const handleCreateFolder = (path: string, name: string) => {
+        // implement handleCreateFolder function
+        setShowNewFolderModal(false);
     };
 
+    const handleChooseFolder = (path: string, files: FileList) => {
+        // implement handleChooseFolder function
+        setShowChooseFolderModal(false);
+    };
+
+    const handleToggleSelection = (item: Item) => {
+        if (selectedItems.includes(item)) {
+            setSelectedItems(selectedItems.filter((i) => i !== item));
+        } else {
+            setSelectedItems([...selectedItems, item]);
+        }
+    };
+
+    const handleClearSelection = () => {
+        setSelectedItems([]);
+    };
     return (
-        <DndProvider backend={HTML5Backend}>
-            <div className="flex flex-col h-screen">
-                <div className="px-4 py-2 bg-gray-400 flex justify-between">
-                    <button className="btn btn-blue" onClick={handleCreateFolder}>
-                        Create folder
+        <div className="relative">
+            <div className="bg-gray-900 p-4 flex items-center justify-between">
+                <div>
+                    <button
+                        className="px-2 py-1 rounded-md text-sm font-medium leading-5 bg-gray-800 text-white focus:outline-none focus:text-gray-100 focus:bg-gray-700 transition duration-150 ease-in-out"
+                        onClick={() => setPath(path.slice(0, -1))}
+                    >
+                        Back
                     </button>
-                    <button className="btn btn-blue" onClick={handleCreateFile}>
-                        Create file
+                    <button
+                        className="ml-3 px-2 py-1 rounded-md text-sm font-medium leading-5 bg-gray-800 text-white focus:outline-none focus:text-gray-100 focus:bg-gray-700 transition duration-150 ease-in-out"
+                        onClick={() => setShowNewFileModal(true)}
+                    >
+                        New File
+                    </button>
+                    <button
+                        className="ml-3 px-2 py-1 rounded-md text-sm font-medium leading-5 bg-gray-800 text-white focus:outline-none focus:text-gray-100 focus:bg-gray-700 transition duration-150 ease-in-out"
+                        onClick={() => setShowNewFolderModal(true)}
+                    >
+                        New Folder
+                    </button>
+                    <button
+                        className="ml-3 px-2 py-1 rounded-md text-sm font-medium leading-5 bg-gray-800 text-white focus:outline-none focus:text-gray-100 focus:bg-gray-700 transition duration-150 ease-in-out"
+                        onClick={() => setShowChooseFolderModal(true)}
+                    >
+                        Choose Folder
                     </button>
                 </div>
-                <div className="px-4 py-2 overflow-y-auto">
-                    <ul className="list-none">
-                        {items.map((item) => (
-                            <DraggableItem key={item.id} item={item}
-                                onMoveItem={handleMoveItem}>
-                                <li key={item.id} className="px-2 py-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleSelectFolder(item)}>
-                                    {/* Display a folder icon for directories and a file icon for files */}
-                                    {item.name}
-                                </li>
-                            </DraggableItem>
-                        ))}
-                    </ul>
+                <div>
+                    <button
+                        className="px-2 py-1 rounded-md text-sm font-medium leading-5 bg-gray-800 text-white focus:outline-none focus:text-gray-100 focus:bg-gray-700 transition duration-150 ease-in-out"
+                        onClick={handleClearSelection}
+                    >
+                        Clear Selection
+                    </button>
+                    <button
+                        className="ml-3 px-2 py-1 rounded-md text-sm font-medium leading-5 bg-gray-800 text-white focus:outline-none focus:text-gray-100 focus:bg-gray-700 transition duration-150 ease-in-out"
+                        onClick={() => {
+                            // implement handleMove function
+                        }}
+                    >
+                        Move
+                    </button>
                 </div>
             </div>
-        </DndProvider>
+            <div className="flex flex-col items-center mt-4">
+                {/* <div className="w-full flex flex-col items-center">
+                    {path.map((p) => (
+                        <div
+                            key={p}
+                            className="text-xs font-medium leading-5 text-gray-300 uppercase tracking-wider"
+                        >
+                            {p}
+                        </div>
+                    ))}
+                </div> */}
+                <div className="w-full mt-4 grid grid-cols-4 gap-4">
+                    {items.map((item) => (
+                        <FileExplorerItem
+                            key={item.id}
+                            item={item}
+                            selected={selectedItems.includes(item)}
+                            onNavigate={handleNavigate}
+                            onToggleSelection={handleToggleSelection}
+                        />
+                    ))}
+                </div>
+            </div>
+            {showNewFileModal && (
+                <NewFileModal
+                    path={path}
+                    onCreate={handleCreateFile}
+                    onClose={() => setShowNewFileModal(false)}
+                />
+            )}
+            {showNewFolderModal && (
+                <NewFolderModal
+                    path={path}
+                    onCreate={handleCreateFolder}
+                    onClose={() => setShowNewFolderModal(false)}
+                />
+            )}
+            {showChooseFolderModal && (
+                <ChooseFolderModal
+                    path={path}
+                    onChoose={handleChooseFolder}
+                    onClose={() => setShowChooseFolderModal(false)}
+                />
+            )}
+        </div>
     );
 };
 
-export default FileExplorer;

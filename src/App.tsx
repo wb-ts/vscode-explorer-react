@@ -1,19 +1,17 @@
-import React from 'react'
-import './App.css'
-import FileExplorer from './components/FileExplorer/FileExplorer'
+import React from 'react';
+import { FileExplorer } from './components/fileExplorer/fileExplorer';
 
 const App: React.FC = () => {
   return (
-    <div className="flex flex-col h-screen">
-      <header className="px-4 py-2 bg-gray-400 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">File Explorer</h1>
-      </header>
-      <main className="flex-1 overflow-y-auto px-4 py-2">
+    <div className="App h-screen flex items-center justify-center bg-gradient-to-r from-gray-800 to-gray-900">
+      <div className="w-full max-w-3xl rounded-lg shadow-xl">
+        <div className="p-4 bg-gray-900 rounded-t-lg">
+          <h1 className="text-2xl font-bold text-gray-100">Etside File Explorer</h1>
+        </div>
         <FileExplorer />
-      </main>
+      </div>
     </div>
   );
 };
 
-
-export default App
+export default App;
