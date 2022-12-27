@@ -5,15 +5,7 @@ export interface Item {
     name: string;
     type: 'folder' | 'file';
     path: string;
-    items?: Item[];
-    content?: string;
+    children?: Item[];
 }
 
-export const createItem = (name: string, type: 'folder' | 'file', path: string): Item => {
-    return {
-        id: uuidv4(), // generate a unique id using uuid library
-        name,
-        type,
-        path,
-    };
-};
+export type ItemType = 'folder' | 'file';
