@@ -12,6 +12,7 @@ interface FoldersResponse {
 }
 
 export const FileExplorer: React.FC = () => {
+    const SERVER_URL = "https://etside.onrender.com";
     const [items, setItems] = useState<Item[]>([]);
     const [path, setPath] = useState<string>('');
     const [selectedItems, setSelectedItems] = useState<Item[]>([]);
@@ -45,7 +46,7 @@ export const FileExplorer: React.FC = () => {
         // implement handleCreateFile function
         setShowNewFolderModal(false);
         // console.log({lastExpandedItem., name});
-        fetch('http://localhost:3500/files/create', {
+        fetch(`${SERVER_URL}/files/create`, {
             method: 'POST',
             body: JSON.stringify({
                 folder: path,
@@ -67,7 +68,7 @@ export const FileExplorer: React.FC = () => {
         // implement handleCreateFolder function
         setShowNewFolderModal(false);
         // console.log({lastExpandedItem., name});
-        fetch('http://localhost:3500/files/create', {
+        fetch(`${SERVER_URL}/files/create`, {
             method: 'POST',
             body: JSON.stringify({
                 folder: path,
@@ -100,7 +101,7 @@ export const FileExplorer: React.FC = () => {
                 thisFile.type = "folder";
                 var subFolderElements: Item[] = [];
                 console.log(`${folderName}/${fileName}`)
-                fetch('http://localhost:3500/files', {
+                fetch(`${SERVER_URL}/files`, {
                     method: 'POST',
                     body: JSON.stringify({ folder: `${folderName}/${fileName}` }),
                     headers: { 'Content-Type': 'application/json' },
@@ -130,7 +131,7 @@ export const FileExplorer: React.FC = () => {
     }
 
     const handleChooseFolder = (folderName: string) => {
-        fetch('http://localhost:3500/files', {
+        fetch(`${SERVER_URL}/files`, {
             method: 'POST',
             body: JSON.stringify({ folder: folderName }),
             headers: { 'Content-Type': 'application/json' },
