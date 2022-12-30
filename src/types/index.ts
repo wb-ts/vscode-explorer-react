@@ -4,7 +4,7 @@ export interface Item {
     id: string; // add an id property
     name: string;
     type: 'folder' | 'file';
-    path: string;
+    parent: string;
     children?: Item[];
 }
 

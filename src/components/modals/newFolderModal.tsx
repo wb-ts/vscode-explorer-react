@@ -4,17 +4,16 @@ import { FaFolder } from 'react-icons/fa';
 import { Modal, Button } from '../../shared/common';
 
 interface Props {
-    path: string;
-    onCreate: (path: string, name: string) => void;
+    onCreate: (name: string) => void;
     onClose: () => void;
 }
 
-const NewFolderModal: React.FC<Props> = ({ onCreate, onClose, path }) => {
+const NewFolderModal: React.FC<Props> = ({ onCreate, onClose}) => {
     const [name, setName] = useState('');
 
     const handleCreate = () => {
         if (name) {
-            onCreate(path, name);
+            onCreate(name);
             setName('');
         }
     };

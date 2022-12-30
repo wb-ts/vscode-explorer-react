@@ -5,12 +5,12 @@ import { Modal, Button } from '../../shared/common';
 import { Item } from '../../types';
 
 interface Props {
-    path: string;
+    parent: string;
     onChoose: (folderName: string) => void;
     onClose: () => void;
 }
 
-const ChooseFolderModal: React.FC<Props> = ({ path, onChoose, onClose }) => {
+const ChooseFolderModal: React.FC<Props> = ({ parent, onChoose, onClose }) => {
     const [name, setName] = useState('');
     const handleChoose = () => {
         onChoose(name)
