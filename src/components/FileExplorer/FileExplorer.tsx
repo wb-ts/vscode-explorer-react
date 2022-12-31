@@ -4,14 +4,12 @@ import { Item } from '../../types';
 import NewFileModal from '../modals/newFileModal';
 import NewFolderModal from '../modals/newFolderModal';
 import ChooseFolderModal from '../modals/chooseFolderModal';
-import { generateItems } from '../../utils/item';
-import { v4 as uuid } from 'uuid';
 
 interface FoldersResponse {
     files: string[]
 }
 
-export const FileExplorer: React.FC = () => {
+const FileExplorer: React.FC = () => {
     const [items, setItems] = useState<Item[]>([]);
     const [parent, setParent] = useState<string>('/');
     const [selectedItems, setSelectedItems] = useState<Item[]>([]);
@@ -220,3 +218,4 @@ export const FileExplorer: React.FC = () => {
     );
 };
 
+export default FileExplorer;
