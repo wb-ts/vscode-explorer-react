@@ -1,5 +1,5 @@
 import React from 'react';
-import FileExplorer  from './components/fileExplorer/fileExplorer';
+import FileExplorer  from './components/fileExplorer';
 const App: React.FC = () => {
   return (
     <div className="App min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-800 to-gray-900">

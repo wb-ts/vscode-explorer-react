@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaFolder, FaFile } from 'react-icons/fa';
-import { Item } from '../../types';
+import { Item } from '../types';
 
 interface Props {
     item: Item;

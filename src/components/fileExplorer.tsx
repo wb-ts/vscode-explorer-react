@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import FileExplorerItem from './fileExplorerItem';
-import { Item } from '../../types';
-import NewFileModal from '../modals/newFileModal';
-import NewFolderModal from '../modals/newFolderModal';
-import ChooseFolderModal from '../modals/chooseFolderModal';
+import { Item } from '../types';
+import NewFileModal from './modals/newFileModal';
+import NewFolderModal from './modals/newFolderModal';
+import ChooseFolderModal from './modals/chooseFolderModal';
 
 interface FoldersResponse {
     files: string[]

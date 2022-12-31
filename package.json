@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/react-icons": "^3.0.0",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.20",
     "react": "^18.2.0",
