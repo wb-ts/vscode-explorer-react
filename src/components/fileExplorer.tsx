@@ -3,7 +3,6 @@ import FileExplorerItem from './fileExplorerItem';
 import { Item } from '../types';
 import NewFileModal from './modals/newFileModal';
 import NewFolderModal from './modals/newFolderModal';
-import ChooseFolderModal from './modals/chooseFolderModal';
 
 interface FoldersResponse {
     files: string[]
@@ -30,7 +29,7 @@ const FileExplorer: React.FC = () => {
                 var storedValues = getFiles();
                 setItems(storedValues)
             }
-            console.log(folders)
+            // console.log(folders)
         }
         getItemsLocalStorage()
     }, [parent]);
@@ -47,7 +46,7 @@ const FileExplorer: React.FC = () => {
 
                 var children = allStorageItems && allStorageItems.filter(child => child.parent == item.id)
                 item.children = children;
-                console.log("children", children)
+                // console.log("children", children)
             }
             storedValueWithChildren.push(item)
         })
@@ -61,7 +60,7 @@ const FileExplorer: React.FC = () => {
     };
 
     const handleExpandFolder = (item: Item) => {
-        console.log("expanded")
+        // console.log("expanded")
         if (expandedItem) {
             expandedItem.id == item.id ? setExpandedItem(undefined) : setExpandedItem(item)
         }
@@ -133,12 +132,16 @@ const FileExplorer: React.FC = () => {
         if (parent !== "/") {
 
             var currentParent: Item | undefined = allItems.find(item => item.id == parent);
-            console.log(`${parent} parent is`, currentParent)
+            // console.log(`${parent} parent is`, currentParent)
             var newP: string | undefined = (currentParent) ? `${currentParent?.parent}` : parent
             setParent(newP)
         }
     }
+    function updateFolder(updatedFolder: Item[]) {
+        setItems(updatedFolder)
+    }
     return (
+
         <div className="relative">
             <div className="bg-gray-900 p-4 flex items-center justify-between pr-5">
                 <div>
@@ -163,7 +166,7 @@ const FileExplorer: React.FC = () => {
                     {/* <button
                         className="ml-3 px-2 py-1 rounded-md text-sm font-medium leading-5 bg-gray-800 text-white focus:outline-none focus:text-gray-100 focus:bg-gray-700 transition duration-150 ease-in-out"
                         onClick={() => setShowChooseFolderModal(true)}
-                    >
+                        >
                         Choose Folder
                     </button> */}
                 </div>
@@ -173,11 +176,16 @@ const FileExplorer: React.FC = () => {
                 </p>
             </div>
             <div className="flex flex-col items-center mt-4">
+
                 <div className="w-full mt-4 flex flex-col space-y-3">
-                    {items.length > 0 ? (items.map((item) => (
+                    {items.length > 0 ? (items.map((item, i) => (
                         <FileExplorerItem
+                            itemIndex={i}
+                            allItems={allItems}
                             key={item.id}
                             item={item}
+                            getFiles={getFiles}
+                            updateFolder={updateFolder}
                             handleSelectChild={handleChooseFolder}
                             selected={selectedItems.includes(item)}
                             onNavigate={handleNavigate}
@@ -194,6 +202,7 @@ const FileExplorer: React.FC = () => {
                         </div>
                     )}
                 </div>
+
             </div>
             {showNewFileModal && (
                 <NewFileModal
@@ -209,12 +218,13 @@ const FileExplorer: React.FC = () => {
             )}
             {/* {showChooseFolderModal && (
                 <ChooseFolderModal
-                    parent={parent}
-                    onChoose={handleChooseFolder}
-                    onClose={() => setShowChooseFolderModal(false)}
+                parent={parent}
+                onChoose={handleChooseFolder}
+                onClose={() => setShowChooseFolderModal(false)}
                 />
             )} */}
         </div>
+
     );
 };
 
